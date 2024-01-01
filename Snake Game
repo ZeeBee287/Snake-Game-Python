@@ -1,6 +1,7 @@
 #Snake Game
-#Enemy snake introduced at score of original snake at intervals of 5, for 10 seconds
-#Enemy snake will spawn again for 10 seconds if original snake is unable to score more than interval of 5
+#Enemy Snake competes for food with Player Snake
+#Enemy Snake spawns at score of original snake at intervals of 5, for 10 seconds (If score is 5, enemy snake spawns. If score is 10, enemy snake spawns and so on)
+#Enemy Snake will spawn again for 10 seconds if original snake is unable to score more than an interval of 5
 
 import tkinter as tk
 import random
