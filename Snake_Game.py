@@ -29,15 +29,21 @@ class SnakeGame:
         self.obstacles = self.create_obstacles()
         self.food = self.create_food()
 
-        self.master.bind("<KeyPress>", self.change_direction)
+        self.master.bind("<KeyPress>", self.start_or_change_direction)
 
-        self.snake_moving = True
+        self.snake_moving = False
+        self.game_started = False
         self.score = 0
         self.update_scoreboard()
         self.enemy_snake = []
         self.enemy_direction = None
         self.enemy_start_time = None
-        self.update()
+        self.countdown_after_id = None
+        
+        # Show press any key message on canvas
+        self.countdown_label.config(text="")
+        self.draw_snake()
+        self.canvas.create_text(200, 200, text="Press Any Key To Start", fill="white", font=("Arial", 24), tags="start_text")
 
     def create_food(self):
         while True:
@@ -64,7 +70,7 @@ class SnakeGame:
     def available_directions(self, head):
         directions = ["Right", "Left", "Up", "Down"]
         available = []
-        
+
         for direction in directions:
             if direction == "Right" and (head[0] + self.snake_size, head[1]) not in self.enemy_snake and (head[0] + self.snake_size, head[1]) not in [obs[:2] for obs in self.obstacles]:
                 available.append(direction)
@@ -74,7 +80,7 @@ class SnakeGame:
                 available.append(direction)
             elif direction == "Down" and (head[0], head[1] + self.snake_size) not in self.enemy_snake and (head[0], head[1] + self.snake_size) not in [obs[:2] for obs in self.obstacles]:
                 available.append(direction)
-        
+
         return available
 
     def move_snake(self, snake):
@@ -90,11 +96,12 @@ class SnakeGame:
         elif self.direction == "Down":
             new_head = (head[0], head[1] + self.snake_size)
 
-        if (new_head[0] < 0 or new_head[0] >= 400 or 
+        if new_head is not None and (new_head[0] < 0 or new_head[0] >= 400 or 
             new_head[1] < 0 or new_head[1] >= 400 or
             new_head in [obs[:2] for obs in self.obstacles] or
-            new_head in snake):
-            return False
+            new_head in self.enemy_snake):
+            self.clear_enemy_snake()
+            return
 
         snake.insert(0, new_head)
         snake.pop()
@@ -163,6 +170,11 @@ class SnakeGame:
 
     def update_scoreboard(self):
         self.scoreboard.config(text=f"Score: {self.score}")
+        
+    def draw_snake(self):
+        self.canvas.delete("snake")
+        for segment in self.snake:
+            self.canvas.create_rectangle(segment[0], segment[1], segment[0] + self.snake_size, segment[1] + self.snake_size, fill="green", tags="snake")
 
     def pause_enemy_snake(self):
         if self.enemy_start_time:
@@ -171,19 +183,23 @@ class SnakeGame:
     def end_game(self):
         self.snake_moving = False
         self.pause_enemy_snake()  
-        self.canvas.create_text(200, 200, text="Game Over!", fill="white", font=("Arial", 24))
+        self.canvas.create_text(200, 180, text="Game Over!", fill="white", font=("Arial", 24), tags="game_over")
+        self.canvas.create_text(200, 220, text="Press SPACE to restart", fill="white", font=("Arial", 18), tags="game_over")
         if self.countdown_after_id:
             self.master.after_cancel(self.countdown_after_id)
             self.countdown_label.config(text="")
+        self.master.bind("<space>", self.restart_game)
 
     def update(self):
+        if not self.snake_moving:
+            return
+            
         snake_moved = self.move_snake(self.snake)
         if not snake_moved:
             self.end_game()
+            return
 
-        self.canvas.delete("snake")
-        for segment in self.snake:
-            self.canvas.create_rectangle(segment[0], segment[1], segment[0] + self.snake_size, segment[1] + self.snake_size, fill="green", tags="snake")
+        self.draw_snake()
 
         if self.score % 5 == 0 and self.score != 0 and not self.enemy_snake:
             if self.enemy_start_time is None:
@@ -206,7 +222,46 @@ class SnakeGame:
         if self.snake_moving:
             self.master.after(100, self.update)
 
-    def change_direction(self, event):
+    def restart_game(self, event=None):
+        # Clear the canvas of game over messages
+        self.canvas.delete("game_over")
+        
+        # Reset game state
+        self.snake = [(100, 100), (90, 100), (80, 100)]
+        self.direction = "Right"
+        self.snake_moving = False
+        self.game_started = False
+        self.score = 0
+        self.update_scoreboard()
+        self.enemy_snake = []
+        self.enemy_direction = None
+        self.enemy_start_time = None
+        
+        # Clear and recreate game elements
+        self.canvas.delete("all")
+        self.obstacles = self.create_obstacles()
+        self.food = self.create_food()
+        
+        # Show start message
+        self.canvas.create_text(200, 200, text="Press Any Key To Start", fill="white", font=("Arial", 24), tags="start_text")
+        self.draw_snake()
+        
+        # Rebind start key
+        self.master.bind("<KeyPress>", self.start_or_change_direction)
+    
+    def start_or_change_direction(self, event):
+        if event.keysym == "space" and not self.snake_moving and not self.game_started:
+            self.restart_game()
+            return
+            
+        if not self.game_started:
+            self.game_started = True
+            self.snake_moving = True
+            self.countdown_label.config(text="")
+            self.canvas.delete("start_text")
+            self.update()
+            return
+            
         if event.keysym == "Right" and self.direction != "Left":
             self.direction = "Right"
         elif event.keysym == "Left" and self.direction != "Right":
