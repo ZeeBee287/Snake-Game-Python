@@ -10,6 +10,7 @@ This is a classic **Snake Game** built using Python and Tkinter. The game featur
 - **Countdown Timer for Enemy Snake**: The enemy snake stays for **10 seconds** before disappearing.
 - **Score Tracking**: The scoreboard updates in real-time.
 - **Game Over Condition**: The game ends if the player collides with obstacles, the enemy snake, or the screen boundaries.
+- **Game Play Setting**: Players can choose the game area where they want to start their new game. After *Game Over*, they can press *Space* to restart, but this time, they get to *select the game area* where the obstacles are placed in a way that best suits their playstyle. Once the area is chosen, they can press any key to begin the game.
 
 ## Gameplay Mechanics
 1. **Player Controls**: Use the arrow keys (**Up, Down, Left, Right**) to control the snake.
@@ -28,9 +29,16 @@ This is a classic **Snake Game** built using Python and Tkinter. The game featur
 - Tkinter (comes pre-installed with Python)
 
 ## Future Improvements
-- Add a **difficulty setting** to control enemy snake speed.
-- Implement a **leaderboard** to track high scores.
-- Introduce **power-ups** for special abilities.
+This is a basic snake game with plenty of room for enhancements! Here are some ideas for future improvements:
+
+- **Improve game graphics** for a more polished look.
+- **Add sounds** to enhance gameplay experience.
+- **Introduce different levels** instead of just randomly placed obstacles.
+- **Implement a difficulty setting** to control enemy snake speed.
+- **Add a leaderboard** to track high scores.
+- **Include power-ups** for special abilities and extra fun!
+
+And so much more! Happy coding, guys! 😃
 
 ---
 
