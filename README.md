@@ -47,11 +47,6 @@ This is a classic **Snake Game** built using Python and Tkinter, with an added t
 - Python 3.x
 - Tkinter (pre-installed with Python)
 
-To run the game:
-```sh
-python snake_game.py
-```
-
 ## 🔮 Future Improvements
 This is just a basic snake game—there’s so much potential for enhancement!
 - 🎨 **Enhanced Graphics** – Improve game visuals.
