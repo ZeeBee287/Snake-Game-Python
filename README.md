@@ -32,10 +32,10 @@ This is a classic **Snake Game** built using Python and Tkinter, with an added t
 - If the score remains at a multiple of 5 without further increase, the enemy snake **respawns**.
 
 ### 4️⃣ **Collision Detection & Game Over**  
-- The game ends if the player:
-  - Collides with an obstacle.
-  - Hits the enemy snake.
-  - Crashes into the screen boundary.
+- The game ends for the player when:
+  - it collides with an obstacle.
+  - the head of the player's snake hits the enemy snake.
+  - it crashes into the screen boundary.
 - The snake cannot reverse direction instantly (e.g., moving left cannot immediately switch to right).
 
 ### 5️⃣ **Restarting & Game Area Selection**  
