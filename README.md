@@ -60,4 +60,3 @@ And much more! 🎉
 
 ---
 Enjoy playing the game! 🐍🎮
-
